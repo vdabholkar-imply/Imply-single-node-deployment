@@ -2,6 +2,7 @@
 # Update and install necessary packages
 sudo apt-get update
 sudo apt-get install -y openjdk-17-jdk python3 perl mysql-server mysql-client
+sudo apt install unzip 
 
 # Setup MySQL
 sudo systemctl start mysql
@@ -13,15 +14,23 @@ cd /opt
 sudo wget https://downloads.apache.org/zookeeper/zookeeper-3.8.4/apache-zookeeper-3.8.4-bin.tar.gz
 sudo tar -xzf apache-zookeeper-3.8.4-bin.tar.gz
 sudo mv apache-zookeeper-3.8.4-bin zookeeper
-cd zookeeper/
+sudo touch /opt/zookeeper/conf/zoo.cfg
+sudo bash -c 'cat > /opt/zookeeper/conf/zoo.cfg <<EOF
+tickTime=2000
+dataDir=/var/zookeeper
+clientPort=2181
+initLimit=5
+syncLimit=2
+EOF'
+cd /opt/zookeeper/bin
 sudo ./zkServer.sh start &
 
 # Install Imply Manager
 cd /opt
 curl -O "https://static.imply.io/release/imply-manager-2024.09.tar.gz"
-mv 'imply-manager-2024.09.tar.gz' imply-manager-2024.09.tar.gz
-tar -xvf imply-manager-2024.09.tar.gz
-sudo ./imply-manager-2024.09/script/install
+mv 'imply-manager-2024.09.tar.gz' imply-managertar.gz
+tar -xvf imply-manager.tar.gz
+sudo ./imply-manager/script/install
 
 # Update manager.conf
 sudo bash -c 'cat > /etc/opt/imply/manager.conf <<EOF
@@ -49,15 +58,15 @@ sudo systemctl start imply-manager
 
 # Install Imply Agent
 curl -O "https://static.imply.io/release/imply-agent-v7.tar.gz"
-mv 'imply-agent-v7.tar.gz' imply-agent-v7.tar.gz
-tar -xvf imply-agent-v7.tar.gz
-sudo ./imply-agent-v7/script/install
+mv 'imply-agent-v7.tar.gz' imply-agent.tar.gz
+tar -xvf imply-agent.tar.gz
+sudo ./imply-agent/script/install
 
 # Update agent.conf
 sudo bash -c 'cat > /etc/opt/imply/agent.conf <<EOF
 IMPLY_MANAGER_HOST=<private_ip_of_master_node>
 IMPLY_MANAGER_AGENT_CLUSTER=<cluster_id_from_imply_manager>
-IMPLY_MANAGER_AGENT_NODE_TYPE=master,query,data
+IMPLY_MANAGER_AGENT_NODE_TYPE=master","query","data
 EOF'
 
 # Start Imply Agent

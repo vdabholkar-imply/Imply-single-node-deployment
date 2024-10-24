@@ -9,6 +9,11 @@ variable "aws_region" {
   type        = string
 }
 
+variable "key_name" {
+  description = "Name of the AWS key pair to use for SSH access"
+  type        = string
+}
+
 variable "instance_type" {
   description = "EC2 instance type"
   type        = string
@@ -74,6 +79,7 @@ resource "aws_security_group_rule" "allow_host_access" {
 resource "aws_instance" "ec2_instance" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
+  key_name      = var.key_name
   subnet_id     = data.aws_subnets.available.ids[0]
 
   vpc_security_group_ids = [var.security_group_id]
