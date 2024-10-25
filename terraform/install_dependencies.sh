@@ -27,9 +27,10 @@ sudo ./zkServer.sh start &
 
 # Install Imply Manager
 cd /opt
-curl -O "https://static.imply.io/release/imply-manager-2024.09.tar.gz"
-mv 'imply-manager-2024.09.tar.gz' imply-managertar.gz
-tar -xvf imply-manager.tar.gz
+sudo curl -O "https://static.imply.io/release/imply-manager-2024.09.tar.gz"
+sudo mv 'imply-manager-2024.09.tar.gz' imply-manager.tar.gz
+sudo tar -xvf imply-manager.tar.gz
+sudo mv 'imply-manager-2024.09' imply-manager
 sudo ./imply-manager/script/install
 
 # Update manager.conf
@@ -57,9 +58,10 @@ EOF'
 sudo systemctl start imply-manager
 
 # Install Imply Agent
-curl -O "https://static.imply.io/release/imply-agent-v7.tar.gz"
-mv 'imply-agent-v7.tar.gz' imply-agent.tar.gz
-tar -xvf imply-agent.tar.gz
+sudo curl -O "https://static.imply.io/release/imply-agent-v7.tar.gz"
+sudo mv 'imply-agent-v7.tar.gz' imply-agent.tar.gz
+sudo tar -xvf imply-agent.tar.gz
+sudo mv 'imply-agent-v7' imply-agent
 sudo ./imply-agent/script/install
 
 # Update agent.conf
